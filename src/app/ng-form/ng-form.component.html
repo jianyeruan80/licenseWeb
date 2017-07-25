@@ -16,80 +16,42 @@
   background: -moz-linear-gradient(top,  rgba(254,231,154,1) 0%, rgba(254,193,81,1) 100%);
   background: -webkit-linear-gradient(top, rgba(254,231,154,1) 0%, rgba(254,193,81,1) 100%);" />
          </div>
-					
-<!-- 
-  <fieldset ngModelGroup="name" style="border:solid #ccc 1px;">
-        <div>
-          <label>Firstname:</label>
-          <input type="text" name="firstname" ngModel>
-        </div>
-        <div>
-          <label>Lastname:</label>
-          <input type="text" name="lastname" ngModel>
-        </div>
-      </fieldset>
-      <fieldset ngModelGroup="address">
-        <div>
-          <label>Street:</label>
-          <input type="text" name="street" ngModel>
-        </div>
-        <div>
-          <label>Zip:</label>
-          <input type="text" name="zip" ngModel>
-        </div>
-        <div>
-          <label>City:</label>
-          <input type="text" name="city" ngModel>
-        </div>
-      </fieldset> -->
-    
-
-
-
-
-          <div style="display:flex;width:100%;height:50px;"  *ngFor="let fh of  formHeader">
+					<div style="display:flex;width:100%;height:50px;"  *ngFor="let fh of  formHeader">
 						      
-						      <div  [ngStyle]="{'padding':'0 5px','height':'50px','flex':t.flex}"    *ngFor="let t of  fh">
-											      
-                         
-                 <!--  <span ngModelGroup="name"> -->
-                       <div class="row" *ngIf="t.type=='input'">
-                              <input placeholder=" "  [(ngModel)]=formData[t.field]  name="{{t.field}}"  />
-                                <label>{{t.label}}</label> 
+						   
+                  <div  [ngStyle]="{'padding':'0 5px','height':'50px','flex':t.flex}"    *ngFor="let t of  fh">
+						
+
+                  <div class="row" *ngIf="t.type=='input'">
+								              <input placeholder=" "  [(ngModel)]=formData[t.field]  name="{{t.field}}"  />
+							                  <label>{{t.label}}</label> 
                                </div>
 
-
-
-                  <div style="text-align:center;padding:25px 5px 0" *ngIf="t.type=='select'">
-                     <label>{{t.label}}&nbsp;</label> 										
-                        <select  [(ngModel)]="formData[t.field]" style="line-height:1.2;height:25px;padding: 0 5px;font-size:16px;" name="{{t.field}}"  >
-                  	  <option value="{{o.id}}" *ngFor="let o of  t.data"  >{{o.value}}</option>
-                        </select>
-                  							                  
-                  </div>
+<div style="text-align:center;padding:25px 5px 0" *ngIf="t.type=='select'">
+   <label>{{t.label}}&nbsp;</label> 										
+      <select  [(ngModel)]="formData[t.field]" style="line-height:1.2;height:25px;padding: 0 5px;font-size:16px;" name="{{t.field}}"  >
+	  <option value="{{o.id}}" *ngFor="let o of  t.data"  >{{o.value}}</option>
+      </select>
+							                  
+</div>
 										
+<div style="text-align:center;padding:30px 5px 0;font-size:18px;" *ngIf="t.type=='checkbox'">
+    
+  <ng-container *ngFor="let o of  t.data;let r = index;">
+      <label for="{{t.field}}{{r}}" style="margin-right:25px;">{{o.value}}
+      <input type="checkBox" 
+      name="{{t.field}}" id="{{t.field}}{{r}}"  [checked]="saveUsername" (change)="saveUsername = !saveUsername"    style="transform:scale(1.5)"/>
+     </label>
+      
+   </ng-container> 
+							                  
+</div>
 
-                    <div style="text-align:center;padding:30px 5px 0;font-size:18px;" *ngIf="t.type=='checkbox'">
-                        
-                      <ng-container *ngFor="let o of  t.data;let r = index;">
-                          <label for="{{t.field}}{{r}}" style="margin-right:25px;">{{o.value}}
-                          <input type="checkBox" 
-                          name="{{t.field}}" id="{{t.field}}{{r}}"  [checked]="saveUsername" (change)="saveUsername = !saveUsername"    style="transform:scale(1.5)"/>
-                         </label>
-                          
-                       </ng-container> 
-                    							                  
-                    </div>
-
-									<!-- </span>
- -->
-
-                </div>
+									</div>
 									
 					</div>
-						
-		</form>
-       <pre>
+						   <pre>
 {{f.value | json}}
     </pre>
+		</form>
 </div>
