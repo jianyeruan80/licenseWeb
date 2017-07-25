@@ -1,0 +1,49 @@
+
+<div class="table">
+	   <div class="search" *ngIf="tableData.pages">
+			    <i  *ngIf="tableData.add" class="fa fa-plus add" (click)="add()" aria-hidden="true"></i>
+			    <div  class="content" data-title="Search">
+				      <div style="flex:1;text-align:center;overflow:hidden" *ngIf="tableData.placeholder">
+				        <i class="fa fa-search" aria-hidden="true"></i>
+				        <input  [formControl]="searchInfo"  name="searchInfo"  placeholder="{{tableData.placeholder}}" />
+
+
+<ng-container *ngFor="let t of  config.searchArray">
+	<b style="margin-left:15px;font-size:20px;">{{t.label}}:</b>
+	<select  [(ngModel)]=t.select style="line-height:1.2;height:25px;padding: 0 5px;font-size:16px;" (change)="search()" >
+	  <option value="{{v.id}}" *ngFor="let v of  t.data"  >{{v.value}}</option>
+	 
+	</select>
+</ng-container>
+				        </div>  
+		                      <div style="flex:1;text-align:center;overflow:hidden">
+					         		 <app-page-view   [config]="config" (goPage)="goPage($event)"></app-page-view>
+					           </div>
+		      </div>
+        </div>	
+	          <div  class="bodyHeader">
+			         <div [ngStyle]="{'text-align':'center','flex':t.flex}"  *ngFor="let t of tableData.header">
+			            {{t.title}}
+		 		     </div> 
+		 	 </div> 
+	   <div style="flex:1;overflow-y:scroll;">
+			  <div class="bodyContent" 
+			 *ngFor="let v of tableData.data;let i = index;"  [style.background] = "i%2==0?'#eee':'#fff'">
+					        <div [ngStyle]="{'border-right':'solid #ddd 1px','text-align':tableData.header[j].align,'flex':tableData.header[j].flex,'padding':getPadding(c.field)}"  
+					        *ngFor="let c of tableData.header;let j = index;" (click)="edit($event,v)" >
+					                 <div *ngIf="c.field=='OPERA'; else elseBlock" style="display:flex;">
+					                    <i class="fa fa-pencil" style="flex:1;line-height:40px"  aria-hidden="true" *ngIf="tableData.edit"></i>
+					                    <i class="fa fa-times" aria-hidden="true"   style="flex:1;line-height:40px" *ngIf="tableData.del"></i>
+					                 </div>
+									<ng-template #elseBlock>
+                                          <span *ngIf="!c.dataType">{{(c.field?v[c.field]:(i+1))}}</span>
+                                          <span *ngIf="c.dataType && c.dataType=='currency'">{{c.field | currency}}</span>
+                                          
+                                          
+									<!-- {{(c.name?v[c.name]:(i+1)) | ngTableFormat:[c.dataType]}} -->
+									</ng-template>
+			        </div>
+	               
+	  <div>
+
+  </div>

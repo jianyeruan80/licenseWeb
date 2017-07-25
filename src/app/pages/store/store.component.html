@@ -1,0 +1,221 @@
+
+<form   #f="ngForm"
+          (ngSubmit)="save()" class="w100 h100 ofy">
+	<div class="form">
+            <input class="submit small-submit" type="submit" value="Save" [disabled]="!f.valid">
+            <input type="file" style="display:none" name="logo" #uploadPic (change)="upload($event)"/>
+     <div class="form-header  va-center"	>
+		   	 <img class="img va-center" src="{{appGlobal.picUrl}}{{store.logo}}" width="50" height="50" (click)="uploadPicture()"  #showPic  style="border-radius:6px;" />
+	</div>
+		 
+		 
+			 <div style="flex:0 1 25%;height:60px;">
+					<div class="row">
+		              <input placeholder=" " [(ngModel)]=store.merchantId readonly="" name="merchantId" />
+	                  <label>MerchantId{{f.valid}}</label> 
+					</div>
+			</div>
+			 <div style="flex:0 1 25%;height:60px;">
+					<div class="row">
+		              <input placeholder=" " [(ngModel)]=store.qrcUrl readonly="" name="qrcurl" />
+	                  <label>QRC</label> 
+					</div>
+			</div>
+			 <div style="flex:0 1 25%;height:60px;">
+					<div class="row">
+		              <input placeholder=" " [(ngModel)]=store.name  name="name" required />
+	                  <label>Store Name</label> 
+					</div>
+			</div>
+					<div style="flex:0 1 25%;height:60px;">
+					<div class="row">
+		              &nbsp;<input type="checkbox"   
+ 
+			   class="el-opacity" id="isClose"  [(ngModel)]=store.isClose  name="isClose"  >
+
+		           <label for="isClose">Close Store</label>
+					</div>
+			</div>
+
+			<div style="flex:0 1 25%;height:60px;">
+					<div class="row">
+		              <input placeholder=" " [(ngModel)]=store.taxRate   type=Number step="0.01"  name="taxRate" required />
+	                  <label>Tax Rate</label> 
+					</div>
+			</div>
+			<div style="flex:0 1 25%;height:60px;">
+					<div class="row">
+		              <input placeholder=" " [(ngModel)]=store.minPrice   type=Number step="0.1"  name="minPrice" required />
+	                  <label>Min Price</label> 
+					</div>
+			</div>
+			 <div style="flex:0 1 25%;height:60px;">
+					<div class="row">
+		              <input placeholder=" " [(ngModel)]=store.maxDistance  type=Number  step="0.1"  name="maxDistance" required />
+	                  <label>Max Distance</label> 
+					</div>
+			</div>
+			<div style="flex:0 1 25%;height:60px;">
+					<div class="row">
+		              <input placeholder=" " [(ngModel)]=store.waitTime type=Number  step="0.1"   name="waitTime" required />
+	                  <label>WaitTime</label> 
+					</div>
+			</div>
+			<div  class="fieldset" data-title="Suport Pay Method">
+     <div style="flex:0 1 20%;height:60px;"  *ngFor="let value of store['payMethod'];let i=index;let last=last;">
+					<div class="row">
+		              &nbsp;<input type="checkbox"   
+ 						class="el-opacity" id="status{{i}}"  [(ngModel)]=value.status  name="status{{i}}"  >
+                       <label for="status{{i}}">{{value.name}} {{value.key}},{{value.ccv}}</label>
+                       
+					</div>
+			</div>
+			</div>
+
+
+<div  class="fieldset" data-title="Order TIme" style="display: flex;flex-flow:column nowrap" >
+	<div style="flex:0 0 50px;width:100%"  *ngFor="let value of store['orderTime'] | filterBy:{'status':true};let i=index;let last=last" >
+			
+		 
+
+			<ng-container *ngFor="let wk of value['week'];let j=index">
+					
+
+					&nbsp;<input type="checkbox"  
+ 
+			   class="el-opacity" id="week{{i}}{{j}}"  [(ngModel)]=wk.status  name="week{{i}}{{j}}"  >
+
+		           <label for="week{{i}}{{j}}">{{wk.value}}</label> 
+			</ng-container>
+
+			<b>From[hh:mm] <input  placeholder="06:00"   type=input [(ngModel)]=value.startTime style="border:0;font-size:1.2rem;"  name="startTime{{i}}{{j}}" required />
+			To[hh:mm] <input   placeholder="22:00"  type=input [(ngModel)]=value.endTime   style="border:0;font-size:1.2rem;"  name="endTime{{i}}{{j}}" required /></b>
+			
+			<i *ngIf="last && i<6" class="fa fa-plus fa-lg" aria-hidden="true" style="padding:10px;" (click)="addOrderTime(i,1)"></i> 
+			<i *ngIf="last && i>0" class="fa fa-minus fa-lg" aria-hidden="true" style="padding:10px;" (click)="addOrderTime(i,-1)"></i>
+	 </div>  
+
+			
+
+		
+</div>
+			<div  class="fieldset" data-title="Distance Fee">
+			<div style="flex:0 1 100%;height:60px;line-height:60px">
+			  &nbsp;<input type="checkbox"  checked="checked"
+ [checked]="store.deliveryFeeStatus" (change)="store.deliveryFeeStatus = !store.deliveryFeeStatus" 
+			   class="el-opacity" id="df"  name="checkbox">
+
+		     <label for="df">&nbsp;	</label>
+		     <ng-container *ngIf="!store.deliveryFeeStatus; else elseBlock"><b> Not deliveryFee</b></ng-container>
+
+<ng-template #elseBlock>
+   <ng-container  *ngFor="let item of store['deliveryFee'];let i=index;" >	
+  <b *ngIf="i===0">&nbsp;Distance(mile):</b><select style="font-size:1.2rem;" [(ngModel)]="store['deliveryFee'][i]['distance']" name="distance{{i}}">
+			   	     <option  *ngFor="let n of distances" >{{n}}</option>
+			     </select> 
+			     <b *ngIf="i===0">Fee:</b>
+			     <select  style="font-size:1.2rem;" [(ngModel)]="store['deliveryFee'][i]['fee']" name="fee{{i}}">
+			     <option *ngFor="let n of fees" >{{n}}</option>
+			     </select>
+	           	  &nbsp;|&nbsp;</ng-container>
+</ng-template>
+	<!-- 	     <ng-template #elseTemplate>
+  else
+</ng-template>
+<ng-container *ngIf="store.deliveryFeeStatus; else elseTemplate" >
+  true
+</ng-container> -->
+					<!--  <div  *ngIf="!store.deliveryFeeStatus; else falsyTemplate">
+					  
+					</div>
+
+		
+
+
+
+			 <ng-container #falsyTemplate *ngFor="let item of deliveryFee;let i=index;" >	
+	              <b *ngIf="i===0">&nbsp;Distance(mile):</b><select style="font-size:1.2rem;" [(ngModel)]="store['deliveryFee'][i]['distance']" name="distance{{i}}">
+			   	     <option  *ngFor="let n of distances" >{{n}}</option>
+			     </select> 
+			     <b *ngIf="i===0">Fee:</b>
+			     <select  style="font-size:1.2rem;" [(ngModel)]="store['deliveryFee'][i]['fee']" name="fee{{i}}">
+			     <option *ngFor="let n of fees" >{{n}}</option>
+			     </select>
+	           	  &nbsp;|&nbsp;
+           	  </ng-container> -->
+      		 	
+			</div>
+			</div>
+			
+			<div  class="fieldset" data-title="Contact">
+			           
+					    	   	<div style="flex:0 1 20%;height:60px;">
+										<div class="row">
+							              <input placeholder=" " [(ngModel)]=store.contact  name="contact" required/>
+						                  <label>Contact</label> 
+										</div>
+								</div>
+								<div style="flex:0 1 20%;height:60px;">
+										<div class="row">
+							              <input placeholder=" "  [(ngModel)]=store.email name="email" required/>
+						                  <label>email</label> 
+										</div>
+								</div>
+								<div style="flex:0 1 20%;height:60px;">
+										<div class="row">
+							              <input placeholder=" "   [(ngModel)]=store.phoneNum1 name="phoneNum1" required/>
+						                  <label>phone Num1</label> 
+										</div>
+								</div>
+							      <div style="flex:0 1 20%;height:60px;">
+									<div class="row">
+						              <input placeholder=" "  [(ngModel)]=store.phoneNum2  name="phoneNum2"/>
+					                  <label>phone Num2</label> 
+									</div>
+								</div>
+										 <div style="flex:0 1 20%;height:60px;">
+									<div class="row">
+						              <input placeholder=" " [(ngModel)]=store.fax name="fax" />
+					                  <label>fax</label> 
+									</div>
+							</div>
+			         </div>
+			 
+			      <div  class="fieldset flex-row" data-title="Address" >
+			           
+					    	   	<div style="flex:0 1 100%;height:60px;">
+										<div class="row">
+							              <input placeholder=" " [(ngModel)]=store.addressInfo.address required="" name="address"/>
+						                  <label>Address</label> 
+										</div>
+								</div>
+							<div style="flex:0 1 33.3%;height:60px;">
+										<div class="row">
+							              <input placeholder=" " [(ngModel)]=store.addressInfo.city required name="city"/>
+						                  <label>city</label> 
+										</div>
+								</div>
+							     <div style="flex:0 1 33.3%;height:60px;" >
+									<div class="row">
+						              <input placeholder=" " [(ngModel)]=store.addressInfo.state required name="state"/>
+					                  <label>state</label> 
+									</div>
+								</div>
+								<div style="flex:0 1 33.3%;height:60px;">
+									<div class="row">
+						              <input placeholder=" " [(ngModel)]=store.addressInfo.zipcode required name="zipcode"/>
+					                  <label>Zip Code</label> 
+									</div>
+								</div>
+								  	<div style="flex:0 1 100%;height:60px;">
+										<div class="row">
+							              <input placeholder=" "  [(ngModel)]=store.addressInfo.description name="description"/>
+						                  <label>description</label> 
+										</div>
+								</div>
+			         </div>   
+			
+			   
+		
+</div>
+</form>

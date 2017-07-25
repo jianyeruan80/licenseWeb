@@ -1,0 +1,109 @@
+
+<div class="w100 h100 flex-row">
+		<div class="flex flex-column" style="flex:0 1 210px;">
+			  <div class="px40 flex-row bg-blue">
+			  		<div class="flex ta-center"><b>Condiments</b></div>
+			  		<div class="fa fa-plus fa-1x px40 ac" aria-hidden="true" style="padding:0 10px"  (click)="isSelect=-1;init()"></div>
+              </div>
+			  <div class="flexy ofy row-child" >
+					  <div [ngClass]="{'px40 flex-row':true,'row-select':isSelect==i}" *ngFor="let item of condiments;let i=index;" (click)="isSelect=i;select(item)"  >
+					  			<div class="flex">{{item.group}}</div>
+					  		<div class="fa fa-trash fa-1x px40 ac" aria-hidden="true" (click)="isSelect=i;delete(item)" 
+					  		style="padding:0 10px 0 5px"></div>
+					  </div>
+			
+			 </div>	  
+			
+		</div>
+		
+		<div class="flex flex-column"  *ngIf="condiment" >
+					<form  #f="ngForm"
+          (ngSubmit)="save()" class="w100" style="margin-top:10px;position:relative;">
+          <input type="file" style="display:none" name="picture" #uploadPic (change)="upload($event)"/>
+
+           <input  *ngIf="!showCondimentGroup" [disabled]="!f.valid"	 type="submit" class="submit"
+					   style="position:absolute;right:10px;top:30px;" value="Save"/>
+					  <fieldset>
+					    <legend  align="right" (click)="showCondimentGroup=!showCondimentGroup"><b>Add/Edit Condiment Group</b></legend>
+					    <div  class="w100 flex-row" *ngIf="!showCondimentGroup"  >
+					    		 
+						   <div style="flex:0 1 25%;height:55px;" >
+										<div class="row">
+							              <input placeholder=" " [(ngModel)]=condiment.group  required="" name="group" />
+						                  <label>Group Name</label> 
+										</div>
+							</div>
+							<div style="flex:0 1 25%;height:55px;" >
+										<div class="row">
+							              <input type="Number" step="1" placeholder=" " [(ngModel)]=condiment.minimun  name="minimun" />
+						                  <label>Minimun</label> 
+										</div>
+							</div>
+							<div style="flex:0 1 25%;height:55px;" >
+										<div class="row">
+							              <input type="Number" step="1"  placeholder=" " [(ngModel)]=condiment.maximun  name="maximun" />
+						                  <label>Maximun </label> 
+										</div>
+							</div>
+
+					    </div>
+					  </fieldset>
+
+					
+					
+				
+				
+<div  class="flexy ofy flex-row w100"  style="justify-content: flex-start;align-content:flex-start;position:relative;"  *ngIf="condiment">
+				 	<!-- <form #v="ngForm"
+          (ngSubmit)="save()" style="margin-top:20px" class="w100"> -->
+					  <fieldset class="w100">
+					    <legend  align="right"   class="px40" style="font-size:1.5rem;">
+					     <b>
+					      <li class="fa fa-plus" (click)="addOp()" aria-hidden="true">(Add)</li>
+					     <!--  <span style="padding:0 5px;">|</span>
+					      <li class="fa fa-pencil" (click)="saveSub()" aria-hidden="true">(Save)</li> --></b>
+					      </legend>
+					      <div  class="w100 flex-row" *ngFor="let item of condiment['options'];let i=index;">
+						    	<div style="flex:0 0 30px;height:55px;" (click)="deleteOp(i)">
+										<div class="row" *ngIf="condiment['options'].length>1">
+								              
+							                  <label><i class="fa fa-trash"  style="color:#AD1457" aria-hidden="true"></i></label> 
+										</div>
+								</div>	 
+								<div style="flex:0 1 60px;height:55px;line-height:55px;">
+											<div class="row">
+											<img class="img va-bottom" src="{{appGlobal.picUrl}}{{item.picture}}" width="40" height="35" (click)="uploadPicture($event)"  id="picture{{item._id || item['key']}}"  style="border-radius:6px;" />
+								          
+								</div>
+								</div>
+							   <div style="flex:1;height:55px;">
+											<div class="row">
+								              <input placeholder=" " [(ngModel)]=item.name  required="" name="name{{item._id || item['key']}}" />
+							                  <label>Condiment Name</label> 
+											</div>
+								</div>
+								<div style="flex:1;height:55px;">
+											<div class="row">
+								              <input placeholder=" " type="Number" [(ngModel)]=item.price  step="0.01" required="" name="price{{item._id || item['key']}}" />
+							                  <label>price</label> 
+											</div>
+								</div>
+							
+								<div style="flex:1;height:55px;">
+											<div class="row">
+								              <input placeholder=" " [(ngModel)]=item.order  name="order{{item._id || item['key']}}" />
+							                  <label>order</label> 
+											</div>
+								</div>
+							
+					    </div>
+
+					    
+					  </fieldset>
+					 
+					
+</div>
+	
+</form>
+		</div>
+</div>
