@@ -16,6 +16,7 @@ export class DeleteBtnComponent implements OnInit {
  }
   ngOnInit() {
        this.delShowEvent.subscribe((event) => {
+       console.log("xxxxxxxxxxxxxxx")
        if(event){
        this.isShow=true;
        this.item=event;

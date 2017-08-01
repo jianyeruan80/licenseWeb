@@ -45,6 +45,7 @@ import { OrdersComponent } from './pages/orders/orders.component';
 import { RenewalComponent } from './pages/renewal/renewal.component';
 import { NgtableComponent } from './ngtable/ngtable.component';
 import { NgFormComponent } from './ng-form/ng-form.component';
+import { DemoComponent } from './pages/demo/demo.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +76,8 @@ import { NgFormComponent } from './ng-form/ng-form.component';
     OrdersComponent,
     RenewalComponent,
     NgtableComponent,
-    NgFormComponent
+    NgFormComponent,
+    DemoComponent
     
     
   ],

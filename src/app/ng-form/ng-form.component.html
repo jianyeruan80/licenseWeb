@@ -1,10 +1,10 @@
 
-<div style="position:absolute;z-index:2;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center" *ngIf="isShow" (click)="hide()">
+<div style="position:absolute;z-index:99999;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center" *ngIf="!isShow" (click)="save('close')">
 
 <i class="fa fa-3x fa-times-circle" aria-hidden="true" style="position:absolute;top:1%;right:2%"></i>
 
-<form style="width:95%;height:95%;background:#fff;border-radius:6px;overflow-y:scroll;padding:10px;"  #f="ngForm"
-          (ngSubmit)="save()" (click)="$event.stopPropagation()">
+<form style="width:95%;height:95%;background:#fff;border-radius:6px;overflow-y:scroll;padding:10px;"   [formGroup]="myForm"
+          (ngSubmit)="save('save')" (click)="$event.stopPropagation()">
         <div style="width:100%;text-align:right;padding-right:3%;height:40px;">
 <input type="submit" *ngIf="bntShow"  value="SAVE" style="border:none;
   cursor: hand;
@@ -16,10 +16,108 @@
   background: -moz-linear-gradient(top,  rgba(254,231,154,1) 0%, rgba(254,193,81,1) 100%);
   background: -webkit-linear-gradient(top, rgba(254,231,154,1) 0%, rgba(254,193,81,1) 100%);" />
          </div>
-					<div style="display:flex;width:100%;height:50px;"  *ngFor="let fh of  formHeader">
-						      
-						   
-                  <div  [ngStyle]="{'padding':'0 5px','height':'50px','flex':t.flex}"    *ngFor="let t of  fh">
+         {{myForm.value | json}}
+         <div style="display:flex;width:100%;min-height:50px;margin:5px 0;"  *ngFor="let fh of  formHeader">
+                
+        <ng-container [ngSwitch]="fh.row.type">
+            <template ngSwitchCase= "JSON" >
+                  <div  formGroupName="{{fh.row.field}}" style="padding:0px;flex:0 0 100%;display:flex;flex-flow:row wrap;border-radius:5px;">
+                       <div style="flex:0 0 100%;font-weight:600;color:#fff;background:#666;border-radius:4px;font-size:20px;text-indent:15px;height:35px;line-height: 35px">
+                              {{fh.row.label}}
+                       </div>
+                       <div [ngSwitch]="fh.row.type" [ngStyle]="{'padding':'0 5px','min-height':'50px','flex':t.flex}"    *ngFor="let t of  fh.data">
+                                    <div class="row" *ngIf="t.type=='input'">
+                                      <input placeholder=" "  formControlName="{{t.field}}"  name="{{t.field}}"  required="{{t.required}}" />
+                                      <label>{{t.label}}</label> 
+                                    </div>
+                                  
+                       </div>
+                  </div>           
+            </template>
+       
+             <template ngSwitchCase= "ARRAY">
+                <div formArrayName="{{fh.row.field}}" style="flex:1;display:flex;flex-flow:row wrap;">
+                     <div  formGroupName="{{i}}" style="padding:0px;flex:0 0 100%;display:flex;flex-flow:row wrap;border-radius:5px;margin-bottom:8px;"  
+                     *ngFor="let arr of fh.data;let i=index;let first=first;let last=last">
+                          
+                          <div style="flex:0 0 100%;display:flex;color:#fff;background:#666;padding: 0 15px;height:35px;line-height: 35px;font-weight:600;border-radius:4px;">
+                                   <div style="flex:1">{{i+1}},{{fh.row.label}}</div>
+
+                                     <div *ngIf="fh.data.length>1" style="padding:0 20px;text-align:center" (click)="save('-',i)">
+                                         <i class="fa fa-minus" aria-hidden="true"></i> 
+                                    </div>  
+                                    <div *ngIf="last" style="padding:0 20px;text-align:center" (click)="save('+',i)">
+                                      <i class="fa fa-plus" aria-hidden="true"></i>
+                                    </div> 
+                                   </div>
+                                     
+                                     <div [ngSwitch]="fh.row.type" [ngStyle]="{'padding':'0 5px','height':'50px','flex':t.flex}"    *ngFor="let t of  arr">
+                                    <div class="row" *ngIf="t.type=='input'">
+                                      <input placeholder=" "  formControlName="{{t.field}}"  name="{{t.field}}"  required="{{t.required}}" />
+                                      <label>{{t.label}}</label> 
+                                    </div>
+                               </div>
+
+                           
+                      </div>   
+
+                  </div>        
+            </template>
+            <template ngSwitchDefault>
+                       <div [ngSwitch]="fh.row.type" [ngStyle]="{'padding':'0 5px','min-height':'50px','flex':t.flex}"    *ngFor="let t of  fh.data">
+                              <div class="row" *ngIf="t.type=='input'">
+                                <input placeholder=" "  formControlName="{{t.field}}"  name="{{t.field}}" required="{{t.required}}" />
+                                <label>{{t.label}}</label> 
+                             </div>
+                             <div style="text-align:center;padding:25px 5px 0" *ngIf="t.type=='select'">
+                           <label>{{t.label}}&nbsp;</label>                     
+                              <select  formControlName="{{t.field}}" style="line-height:1.2;height:25px;padding: 0 5px;font-size:16px;" name="{{t.field}}" >
+                            <option value="{{o.id}}" *ngFor="let o of  t.data"  >{{o.value}}</option>
+                              </select>
+                                
+</div>
+                                 <!--  <div  *ngIf="t.type=='select'">
+                                    
+                                      <label>{{t.label}}</label> 
+                                      <select  formControlName="{{t.field}}" style="line-height:1.2;height:25px;padding: 0 5px;font-size:16px;" name="{{t.field}}"  >
+         <option value="{{o.id}}" *ngFor="let o of  t.data"  >{{o.value}}</option>
+      </select>
+                                    </div> -->
+
+
+                     </div>
+            </template>
+        </ng-container>
+               
+
+             
+<!--   <template ngSwitchCase= "JSON" >
+                            <ng-container formGroupName="{{fh.row.name}}">
+                            <fieldset>
+                                <legend>Personalia:</legend>
+                                <div class="row" *ngIf="t.type=='input'">
+                                    <input placeholder=" "  formControlName="{{t.field}}"  name="{{t.field}}"  />
+                                    <label>{{t.label}}</label> 
+                                 </div> 
+
+         </fieldset>
+                             </ng-container>
+  </template>
+  <template ngSwitchCase= "ARRAY"> <b> West Direction</b> </template>
+  <template ngSwitchDefault>
+                            <div class="row" *ngIf="t.type=='input'">
+                                <input placeholder=" "  formControlName="{{t.field}}"  name="{{t.field}}"  />
+                                <label>{{t.label}}</label> 
+                             </div>
+   </template> -->
+
+
+            
+         </div>
+         
+					<!-- <div style="display:flex;width:100%;height:50px;"  *ngFor="let fh of  formHeader">
+						      {{fh}}
+						   <div  [ngStyle]="{'padding':'0 5px','height':'50px','flex':t.flex}"    *ngFor="let t of  fh">
 						
 
                   <div class="row" *ngIf="t.type=='input'">
@@ -51,7 +149,7 @@
 									
 					</div>
 						   <pre>
-{{f.value | json}}
-    </pre>
+{{formHeader | json}}
+    </pre> -->
 		</form>
 </div>

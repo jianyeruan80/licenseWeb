@@ -1,7 +1,5 @@
 import { Component, OnInit,ViewChild ,Renderer, EventEmitter,ElementRef,Input,Output} from '@angular/core';
-/*import { Table } from './table';
-import { Content } from './content';*/
-import { FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import {Router,ActivatedRoute}  from '@angular/router';
 import 'rxjs/add/operator/map';
 import "rxjs/add/operator/debounceTime";
@@ -13,34 +11,50 @@ import "rxjs/add/operator/distinctUntilChanged"
   styleUrls: ['./ng-form.component.css']
 })
 export class NgFormComponent implements OnInit {
-formHeader:Object;
-formData:Object;
-@Input() isShowEvent:EventEmitter<Object>;
-isShow:boolean=false;
-bntShow:boolean=true;
-@Output() saveEvent: EventEmitter<Object>;
-  constructor() {
-  	this.isShowEvent = new EventEmitter<Object>();
-  this.saveEvent = new EventEmitter<Object>();
-  	//this.isShowEvent=new EventEmitter<any>;
+  @Input() myFormEvent: EventEmitter<any>;
+  formHeader:any;
+  myForm: FormGroup;
+  @Output() outFormEvent: EventEmitter<any>;
+  form:any=
+  {
+       "header":Array,"data":FormGroup,"type":"","i":Number  
+  }
+
+ constructor(private _fb: FormBuilder) { 
+    this.myFormEvent = new EventEmitter<any>();
+    this.outFormEvent = new EventEmitter<any>();
+    this.myForm = this._fb.group({});
+   
    }
  ngOnInit() {
-    this.isShowEvent.subscribe((event) => {
-       if(event.status=="VIEW"){
-       	this.bntShow=false;
-       }else{
-       	this.bntShow=true;
-       }
-       this.isShow=event.isShow;
-       this.formHeader=event.formHeader;
-       this.formData=event.data;
-      
-    })
+  this.myFormEvent.subscribe(
+     (event) => {
+      this.formHeader=event.header;
+      this.myForm = event.data;
+      console.log("============777777========================");
+    console.log(this.formHeader);
+    console.log(this.myForm);
+    console.log("=============99999999999=======================");
+  },
+  (error) => {
+    console.log(2);
+  },
+  () => {
+    console.log(3);
+ 
   }
-  hide(){this.isShow=false}
-  save(){
-  	
-    this.saveEvent.emit(this.formData);
+     )
+
+  }
+ 
+  save(type,i){
+    
+  	this.form["header"]=this.formHeader;
+    this.form["data"]=this.myForm;
+    this.form["type"]=type;
+    if(i>=0)this.form["i"]=i;
+    
+    this.outFormEvent.emit(this.form);
   }
 
 }

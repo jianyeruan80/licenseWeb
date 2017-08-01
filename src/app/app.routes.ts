@@ -12,13 +12,14 @@ import { SettingComponent } from './pages/setting/setting.component';
 import { ItemsComponent } from './pages/items/items.component';
 import { MenusComponent } from './pages/menus/menus.component';
 import { RenewalComponent } from './pages/renewal/renewal.component';
+import { DemoComponent } from './pages/demo/demo.component';
 import { CondimentsComponent } from './pages/condiments/condiments.component';
 import { PageViewComponent } from './page-view/page-view.component';
 import { NgtableComponent } from './ngtable/ngtable.component';
 export const routes: Routes = [
  { path: '', redirectTo: 'login', pathMatch: 'full' },
  { path: 'setting', component: SettingComponent },
- { path: 'login', component: AboutComponent },
+ { path: 'login', component: DemoComponent },
 
   { path: 'index', component: IndexComponent ,children: [
       { path: '', redirectTo: 'store', pathMatch: 'full' },
